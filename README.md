@@ -17,3 +17,9 @@ Project B is a lightweight database system that utilizes CSV files as its primar
 3. Save changes back to the CSV file.
 
 This project is built in [programming language, e.g., Python] and serves as a foundation for more advanced database systems.
+## Query Grammar
+Supports basic SELECT and WHERE queries.
+
+## Limitations
+- No JOIN
+- No nested conditions

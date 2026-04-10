@@ -50,6 +50,8 @@ The system loads data from a CSV file, stores it in memory, and supports basic q
 ```bash
 g++ main.cpp -o app.exe
 
+---
+
 ```markdown
 ## Author
 

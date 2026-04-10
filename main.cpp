@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ vector<string> split(const string& line) {
 struct Table {
     vector<string> headers;
     vector<vector<string>> rows;
+    unordered_map<string, vector<int>> cityIndex;
 };
 
 void selectAll(const Table& table) {
@@ -58,7 +60,43 @@ void selectWhere(const Table& table, string column, string value) {
         }
     }
 }
+void buildCityIndex(Table& table) {
+    int cityCol = -1;
 
+    for (int i = 0; i < table.headers.size(); i++) {
+        if (table.headers[i] == "city") {
+            cityCol = i;
+            break;
+        }
+    }
+
+    if (cityCol == -1) {
+        cout << "City column not found\n";
+        return;
+    }
+
+    for (int i = 0; i < table.rows.size(); i++) {
+        table.cityIndex[table.rows[i][cityCol]].push_back(i);
+    }
+}
+void selectWhereCityIndexed(const Table& table, string city) {
+    for (auto h : table.headers) cout << h << "\t";
+    cout << endl;
+
+    auto it = table.cityIndex.find(city);
+
+    if (it == table.cityIndex.end()) {
+        cout << "No matching rows\n";
+        return;
+    }
+
+    for (int rowIndex : it->second) {
+        for (auto val : table.rows[rowIndex]) {
+            cout << val << "\t";
+        }
+        cout << endl;
+    }
+}
 int main() {
     ifstream file("sample.csv");
 
@@ -81,12 +119,15 @@ int main() {
             table.rows.push_back(row);
         }
     }
+   buildCityIndex(table);
 
     cout << "SELECT *:\n";
     selectAll(table);
 
-    cout << "\nWHERE city = Hanoi:\n";
+    cout << "\nWHERE city = Hanoi (full scan):\n";
     selectWhere(table, "city", "Hanoi");
 
+    cout << "\nWHERE city = Hanoi (indexed):\n";
+    selectWhereCityIndexed(table, "Hanoi");
     return 0;
 }

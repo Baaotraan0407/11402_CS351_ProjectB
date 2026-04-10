@@ -129,6 +129,15 @@ int main() {
     cout << "SELECT *:\n";
     selectAll(table);
 
+    cout << "\nAvailable columns:\n";
+    for (auto h : table.headers) {
+        cout << "- " << h << endl;
+    }
+
+    cout << "\nExample:\n";
+    cout << "column: city\n";
+    cout << "value: Hanoi\n";
+
     string column, value;
 
     cout << "\nEnter column: ";

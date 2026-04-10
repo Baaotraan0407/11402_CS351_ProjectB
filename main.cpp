@@ -18,6 +18,47 @@ vector<string> split(const string& line) {
     return result;
 }
 
+struct Table {
+    vector<string> headers;
+    vector<vector<string>> rows;
+};
+
+void selectAll(const Table& table) {
+    for (auto h : table.headers) cout << h << "\t";
+    cout << endl;
+
+    for (auto row : table.rows) {
+        for (auto val : row) cout << val << "\t";
+        cout << endl;
+    }
+}
+
+void selectWhere(const Table& table, string column, string value) {
+    int colIndex = -1;
+
+    for (int i = 0; i < table.headers.size(); i++) {
+        if (table.headers[i] == column) {
+            colIndex = i;
+            break;
+        }
+    }
+
+    if (colIndex == -1) {
+        cout << "Column not found\n";
+        return;
+    }
+
+    for (auto h : table.headers) cout << h << "\t";
+    cout << endl;
+
+    for (auto row : table.rows) {
+        if (row[colIndex] == value) {
+            for (auto val : row) cout << val << "\t";
+            cout << endl;
+        }
+    }
+}
+
 int main() {
     ifstream file("sample.csv");
 
@@ -27,17 +68,25 @@ int main() {
     }
 
     string line;
-
-    cout << "Reading CSV by columns:\n";
+    Table table;
+    bool isHeader = true;
 
     while (getline(file, line)) {
         vector<string> row = split(line);
 
-        for (string val : row) {
-            cout << val << " | ";
+        if (isHeader) {
+            table.headers = row;
+            isHeader = false;
+        } else {
+            table.rows.push_back(row);
         }
-        cout << endl;
     }
+
+    cout << "SELECT *:\n";
+    selectAll(table);
+
+    cout << "\nWHERE city = Hanoi:\n";
+    selectWhere(table, "city", "Hanoi");
 
     return 0;
 }

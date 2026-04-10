@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <unordered_map>
+#include <chrono>
 
 using namespace std;
 
@@ -121,13 +122,24 @@ int main() {
     }
    buildCityIndex(table);
 
-    cout << "SELECT *:\n";
-    selectAll(table);
+cout << "SELECT *:\n";
+selectAll(table);
 
-    cout << "\nWHERE city = Hanoi (full scan):\n";
-    selectWhere(table, "city", "Hanoi");
+cout << "\nWHERE city = Hanoi (full scan):\n";
+auto start1 = chrono::high_resolution_clock::now();
+selectWhere(table, "city", "Hanoi");
+auto end1 = chrono::high_resolution_clock::now();
 
-    cout << "\nWHERE city = Hanoi (indexed):\n";
-    selectWhereCityIndexed(table, "Hanoi");
-    return 0;
+cout << "\nWHERE city = Hanoi (indexed):\n";
+auto start2 = chrono::high_resolution_clock::now();
+selectWhereCityIndexed(table, "Hanoi");
+auto end2 = chrono::high_resolution_clock::now();
+
+cout << "\nScan time: "
+     << chrono::duration_cast<chrono::nanoseconds>(end1 - start1).count()
+     << " ns\n";
+
+cout << "Index time: "
+     << chrono::duration_cast<chrono::nanoseconds>(end2 - start2).count()
+     << " ns\n";
 }

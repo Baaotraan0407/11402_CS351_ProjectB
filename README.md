@@ -52,7 +52,6 @@ g++ main.cpp -o app.exe
 
 ---
 
-```markdown
 ## Author
 
 - Name: Kassie (陳寶林)

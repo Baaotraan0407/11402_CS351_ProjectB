@@ -1,25 +1,58 @@
 # Project B: CSV Mini Database & Query Engine
+
 ## Overview
 
-Project B is a lightweight database system that utilizes CSV files as its primary storage mechanism. It features a simple query engine that supports basic SQL-like operations, including SELECT, INSERT, UPDATE, and DELETE queries on tabular data stored in CSV format. The project demonstrates fundamental concepts in database management, file I/O, and query parsing, making it an educational tool for understanding mini-database implementations.
+This project implements a lightweight CSV-based mini database system in C++.
+It demonstrates fundamental concepts of data storage, querying, indexing, and performance comparison.
+
+The system loads data from a CSV file, stores it in memory, and supports basic query operations through a simple interactive interface.
+
+---
 
 ## Features
 
-- **CSV Storage**: Reads and writes data to CSV files without requiring a full-fledged database server.
-- **Query Engine**: Supports a subset of SQL commands for querying and manipulating data.
-- **Command-Line Interface**: Provides a CLI for interacting with the database.
-- **Error Handling**: Includes basic validation and error reporting for invalid queries or file operations.
+- Read data from a CSV file
+- Store data using an in-memory table structure
+- Support `SELECT *`
+- Support `WHERE column = value`
+- Build an index for the `city` column using `unordered_map`
+- Compare full scan and indexed query performance using timing
+- Accept simple user input for query execution
 
-## Usage
+---
 
-1. Load a CSV file into the system.
-2. Execute queries via the command line (e.g., `SELECT * FROM table WHERE condition`).
-3. Save changes back to the CSV file.
+## System Architecture
 
-This project is built in [programming language, e.g., Python] and serves as a foundation for more advanced database systems.
-## Query Grammar
-Supports basic SELECT and WHERE queries.
+- **CSV Parser**
+  - Reads data line by line
+  - Splits fields using comma delimiter
 
-## Limitations
-- No JOIN
-- No nested conditions
+- **Table Structure**
+  - Stores column names in `headers`
+  - Stores records in `rows`
+  - Stores city index in `cityIndex`
+
+- **Query Functions**
+  - `selectAll()` → display all rows
+  - `selectWhere()` → perform full scan query
+  - `selectWhereCityIndexed()` → perform indexed lookup
+
+- **Indexing**
+  - Hash-based index for the `city` column
+  - Maps city name to matching row indices
+
+---
+
+## Example Usage
+
+### Compile
+
+```bash
+g++ main.cpp -o app.exe
+
+```markdown
+## Author
+
+- Name: Kassie (陳寶林)
+- Student ID: 1113540
+- GitHub: https://github.com/Baaotraan0407

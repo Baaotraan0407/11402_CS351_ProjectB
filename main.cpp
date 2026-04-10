@@ -39,7 +39,7 @@ void selectAll(const Table& table) {
 void selectWhere(const Table& table, string column, string value) {
     int colIndex = -1;
 
-    for (int i = 0; i < table.headers.size(); i++) {
+    for (int i = 0; i < (int)table.headers.size(); i++) {
         if (table.headers[i] == column) {
             colIndex = i;
             break;
@@ -61,10 +61,11 @@ void selectWhere(const Table& table, string column, string value) {
         }
     }
 }
+
 void buildCityIndex(Table& table) {
     int cityCol = -1;
 
-    for (int i = 0; i < table.headers.size(); i++) {
+    for (int i = 0; i < (int)table.headers.size(); i++) {
         if (table.headers[i] == "city") {
             cityCol = i;
             break;
@@ -76,10 +77,11 @@ void buildCityIndex(Table& table) {
         return;
     }
 
-    for (int i = 0; i < table.rows.size(); i++) {
+    for (int i = 0; i < (int)table.rows.size(); i++) {
         table.cityIndex[table.rows[i][cityCol]].push_back(i);
     }
 }
+
 void selectWhereCityIndexed(const Table& table, string city) {
     for (auto h : table.headers) cout << h << "\t";
     cout << endl;
@@ -98,6 +100,7 @@ void selectWhereCityIndexed(const Table& table, string city) {
         cout << endl;
     }
 }
+
 int main() {
     ifstream file("sample.csv");
 
@@ -120,26 +123,39 @@ int main() {
             table.rows.push_back(row);
         }
     }
-   buildCityIndex(table);
 
-cout << "SELECT *:\n";
-selectAll(table);
+    buildCityIndex(table);
 
-cout << "\nWHERE city = Hanoi (full scan):\n";
-auto start1 = chrono::high_resolution_clock::now();
-selectWhere(table, "city", "Hanoi");
-auto end1 = chrono::high_resolution_clock::now();
+    cout << "SELECT *:\n";
+    selectAll(table);
 
-cout << "\nWHERE city = Hanoi (indexed):\n";
-auto start2 = chrono::high_resolution_clock::now();
-selectWhereCityIndexed(table, "Hanoi");
-auto end2 = chrono::high_resolution_clock::now();
+    string column, value;
 
-cout << "\nScan time: "
-     << chrono::duration_cast<chrono::nanoseconds>(end1 - start1).count()
-     << " ns\n";
+    cout << "\nEnter column: ";
+    cin >> column;
 
-cout << "Index time: "
-     << chrono::duration_cast<chrono::nanoseconds>(end2 - start2).count()
-     << " ns\n";
+    cout << "Enter value: ";
+    cin >> value;
+
+    cout << "\nWHERE " << column << " = " << value << " (full scan):\n";
+    auto start1 = chrono::high_resolution_clock::now();
+    selectWhere(table, column, value);
+    auto end1 = chrono::high_resolution_clock::now();
+
+    if (column == "city") {
+        cout << "\nWHERE city = " << value << " (indexed):\n";
+        auto start2 = chrono::high_resolution_clock::now();
+        selectWhereCityIndexed(table, value);
+        auto end2 = chrono::high_resolution_clock::now();
+
+        cout << "\nScan time: "
+             << chrono::duration_cast<chrono::nanoseconds>(end1 - start1).count()
+             << " ns\n";
+
+        cout << "Index time: "
+             << chrono::duration_cast<chrono::nanoseconds>(end2 - start2).count()
+             << " ns\n";
+    }
+
+    return 0;
 }

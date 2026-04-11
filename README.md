@@ -99,7 +99,6 @@ g++ main.cpp -o app.exe
 ```bash
 ./app.exe
 ```
-
 ---
 
 ### Sample Output
